@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const hpp = require('hpp');
+const compression = require('compression');
 // const monogoSantize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const express = require('express');
@@ -59,6 +60,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl}`, 404));
 });
 
+app.use(compression());
 app.use(globalErrorHandler);
 
 module.exports = app;
