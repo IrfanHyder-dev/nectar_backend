@@ -1,27 +1,32 @@
-const mongoose = require('mongoose');
+const ngrok = require('ngrok');
 const dotenv = require('dotenv');
-
-dotenv.config({ path: './config.env' });
+const mongoose = require('mongoose');
 const app = require('./app');
 
+dotenv.config({ path: './config.env' });
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD,
 );
+mongoose.connect(DB).then(() => {
+  console.log('DB connection successful');
+});
+const PORT = process.env.PORT || 80;
+app.listen(PORT, async () => {
+  console.log(`App running on port ${PORT}....`);
 
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    console.log('DB connection successful');
-  });
+  console.log(`current environment is ${process.env.NODE_ENV}...`);
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`App running on port...`);
+  if (process.env.NODE_ENV === 'ngrok') {
+    try {
+      const url = await ngrok.connect(PORT);
+      console.log(`ngrok url is =====> ${url}`);
+    } catch (error) {
+      console.log(
+        `got error while connecting to ngrok server. error is ${error}`,
+      );
+    }
+  }
 });
 
 process.on('unhandledRejection', (err) => {

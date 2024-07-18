@@ -1,7 +1,7 @@
 const multer = require('multer');
 const sharp = require('sharp');
 const catchAsync = require('../utils/catchAsync');
-const Users = require('../models/user_model');
+const Users = require('../natours_models/user_model');
 const AppError = require('../utils/appErrors');
 const factory = require('./handlerFactory');
 

@@ -1,6 +1,6 @@
 const multer = require('multer');
 const sharp = require('sharp');
-const Tour = require('../models/tour_model');
+const Tour = require('../natours_models/tour_model');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appErrors');
