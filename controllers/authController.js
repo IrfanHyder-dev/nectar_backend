@@ -8,14 +8,17 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, res,msg) => {
   const token = signToken(user._id);
   console.log(`Token: ${token}`);
   user.password = undefined;
   res.status(statusCode).json({
     success: true,
-    token,
-    data: user,
+    message:msg,
+    data:{
+      authtoken:token,
+      user:user,
+    },
   });
 };
 
@@ -25,21 +28,23 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
   });
-  createSendToken(newUser, 201, res);
+  createSendToken(newUser, 201, res,'Account created successfully.');
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    next(new AppError('Please provide email and password', 400));
+    return next(new AppError('Please provide email and password', 400));
   }
 
   const user = await User.findOne({ email }).select('+password');
-
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    next(new AppError('Incorrect email or password', 401));
+// console.log(user);
+// console.log(!user);
+// console.log((await user.correctPassword( user.password,password)));
+  if (!user || !(await user.correctPassword(user.password,password))) {
+   return next(new AppError('Incorrect email or password', 401));
   }
 
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, res, "Logged in successfully.");
 });

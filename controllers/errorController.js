@@ -6,8 +6,10 @@ const handelCastErrorDB = (err) => {
 };
 
 const handelDuplicateFieldDB = (err) => {
-  const value = err.errmsg.match(/(["'])(?:\\.|[^\\])*?\1/)[0];
-  const message = `Duplicate field value: ${value}. Please use another value`;
+  const field = Object.keys(err.keyPattern)[0];
+  // const value = err.errmsg.match(/(["'])(?:\\.|[^\\])*?\1/)[0];
+  // const message = `Duplicate field value: ${value}. Please use another value`;
+  const message = `Duplicate ${field}, Please use another ${field}`;
   return new AppError(message, 400);
 };
 
@@ -18,11 +20,14 @@ const handelValidationErrorDB = (err) => {
 };
 
 const sendErrorDev = (err, res) => {
+  console.log(`*** error stack trace is *** ${err.stack}`);
   res.status(err.statusCode).json({
+    // res.status(200).json({
     success: err.success,
-    error: err,
+    // error: err,
     message: err.message,
-    stack: err.stack,
+    // stack: err.stack,
+    data: {},
   });
 };
 const sendErrorProd = (err, res) => {
@@ -47,7 +52,7 @@ const handelTokenExpiredErrorDB = () =>
 
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
-  err.success = err.success || 'false';
+  err.success = err.success || false;
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {

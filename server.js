@@ -1,4 +1,4 @@
-const ngrok = require('ngrok');
+// const ngrok = require('ngrok');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const app = require('./app');
@@ -16,16 +16,17 @@ app.listen(PORT, async () => {
   console.log(`App running on port ${PORT}....`);
 
   console.log(`current environment is ${process.env.NODE_ENV}...`);
-
+  
   if (process.env.NODE_ENV === 'ngrok') {
-    try {
-      const url = await ngrok.connect(PORT);
-      console.log(`ngrok url is =====> ${url}`);
-    } catch (error) {
-      console.log(
-        `got error while connecting to ngrok server. error is ${error}`,
-      );
-    }
+    
+    // try {
+      // const url = await ngrok.connect(4041);
+      // console.log(`ngrok url is =====> ${url}`);
+    // } catch (error) {
+    //   console.log(
+    //     `got error while connecting to ngrok server. error is ${error}`,
+    //   );
+    // }
   }
 });
 
