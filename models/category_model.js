@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-  categroyName: {
+  categoryName: {
     type: String,
-    unique: true,
+    unique: false,
     required: [true, 'Please provide a category name'],
   },
   image: {
@@ -13,5 +13,13 @@ const categorySchema = new mongoose.Schema({
   color: { type: String },
 });
 
-const Categroy = mongoose.model('Category', categorySchema);
-module.exports = Categroy;
+// categorySchema.post(/^find/,(doc,next) =>{
+//   const imageUrl = `${req.protocol}://${req.get('host')}/public/img/users/`;
+//   doc.forEach(doc =>{
+//     doc.image = `${imageUrl}${doc.image}`;
+//   });
+//   next();
+// });
+
+const Category = mongoose.model('Category', categorySchema);
+module.exports = Category;

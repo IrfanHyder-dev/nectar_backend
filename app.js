@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const userRoutes = require('./routes/userRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 const AppError = require('./utils/appErrors');
 const globalErrorHandler = require('./controllers/errorController');
 // dotenv.config({ path: './config.env' });
@@ -19,6 +20,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1', categoryRoutes);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
